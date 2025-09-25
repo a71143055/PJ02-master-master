@@ -12,8 +12,12 @@ import java.util.List;
 
 @Controller
 public class HomeController {
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
+
+    public HomeController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @GetMapping("/home")
     public String showHomePage(Model model, Principal principal) {

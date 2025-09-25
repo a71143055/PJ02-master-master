@@ -7,7 +7,6 @@ import kr.ac.kopo.jeong.pj_submission_site.model.User;
 import kr.ac.kopo.jeong.pj_submission_site.repository.EnrollmentRepository;
 import kr.ac.kopo.jeong.pj_submission_site.repository.LectureRepository;
 import kr.ac.kopo.jeong.pj_submission_site.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -25,9 +24,10 @@ public class LectureController {
     private final LectureRepository lectureRepository;
     private final UserRepository userRepository;
 
-    public LectureController(LectureRepository lectureRepository, UserRepository userRepository) {
+    public LectureController(LectureRepository lectureRepository, UserRepository userRepository, EnrollmentRepository enrollmentRepository) {
         this.lectureRepository = lectureRepository;
         this.userRepository = userRepository;
+        this.enrollmentRepository = enrollmentRepository;
     }
 
     @GetMapping("/create")
@@ -69,8 +69,7 @@ public class LectureController {
     }
 
 
-    @Autowired
-    private EnrollmentRepository enrollmentRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     @PostMapping("/enroll")
     @PreAuthorize("hasRole('STUDENT')")
