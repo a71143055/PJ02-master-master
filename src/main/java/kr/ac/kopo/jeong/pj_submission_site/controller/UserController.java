@@ -2,7 +2,6 @@ package kr.ac.kopo.jeong.pj_submission_site.controller;
 
 import kr.ac.kopo.jeong.pj_submission_site.model.Role;
 import kr.ac.kopo.jeong.pj_submission_site.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
