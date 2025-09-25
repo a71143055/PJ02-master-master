@@ -2,6 +2,7 @@ package kr.ac.kopo.jeong.pj_submission_site.controller;
 
 import kr.ac.kopo.jeong.pj_submission_site.model.Enrollment;
 import kr.ac.kopo.jeong.pj_submission_site.model.Lecture;
+import kr.ac.kopo.jeong.pj_submission_site.model.Role;
 import kr.ac.kopo.jeong.pj_submission_site.model.User;
 import kr.ac.kopo.jeong.pj_submission_site.repository.EnrollmentRepository;
 import kr.ac.kopo.jeong.pj_submission_site.repository.LectureRepository;
@@ -20,12 +21,14 @@ import java.util.List;
 @RequestMapping("/lectures")
 public class LectureController {
 
-    @Autowired
-    private LectureRepository lectureRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final LectureRepository lectureRepository;
+    private final UserRepository userRepository;
 
+    public LectureController(LectureRepository lectureRepository, UserRepository userRepository) {
+        this.lectureRepository = lectureRepository;
+        this.userRepository = userRepository;
+    }
 
     @GetMapping("/create")
     @PreAuthorize("hasRole('PROFESSOR')")
@@ -113,7 +116,10 @@ public class LectureController {
 
         model.addAttribute("username", user.getUsername());
 
-        if (user.getRole().equals("PROFESSOR")) {
+        if (user.getRole() == Role.PROFESSOR) {
+            // 교수 전용 로직
+        }
+        {
             List<Lecture> myLectures = lectureRepository.findByProfessor(user);
             model.addAttribute("myLectures", myLectures); // ✅ 있어야 함
         }
@@ -121,7 +127,21 @@ public class LectureController {
         return "home";
     }
 
+    @GetMapping("/lectures/{id}")
+    @PreAuthorize("hasRole('PROFESSOR')")
+    public String showLectureDetail(@PathVariable Long id, Model model, Principal principal) {
+        Lecture lecture = lectureRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("강의를 찾을 수 없습니다."));
 
+        User professor = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("사용자 정보를 찾을 수 없습니다."));
 
+        if (!lecture.getProfessor().getId().equals(professor.getId())) {
+            throw new AccessDeniedException("접근 권한이 없습니다.");
+        }
+
+        model.addAttribute("lecture", lecture);
+        return "lectureDetail";
+    }
 
 }
