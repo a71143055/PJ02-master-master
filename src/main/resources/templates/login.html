@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h2>로그인</h2>
+    <form th:action="@{/login}" method="post">
+        <input type="text" name="username" required>
+        <input type="password" name="password" required>
+
+        <!-- CSRF 토큰 -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+        <button type="submit">로그인</button>
+    </form>
+
+
+    <p>계정이 없으신가요? <a th:href="@{/register}">회원가입</a></p>
+</div>
+</body>
+</html>

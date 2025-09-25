@@ -1,0 +1,8 @@
+<h2>강의 생성</h2>
+<form th:action="@{/lectures/create}" method="post">
+    <input type="text" name="title" placeholder="강의명" required />
+    <textarea name="description" placeholder="설명" required></textarea>
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <button type="submit">생성</button>
+</form>
+
