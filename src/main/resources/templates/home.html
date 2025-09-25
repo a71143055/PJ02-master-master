@@ -30,10 +30,13 @@
       <td th:text="${lecture.description}">설명</td>
       <td><a th:href="@{'/lectures/' + ${lecture.id}}">보기</a></td>
     </tr>
+
+    <!-- 강의가 없을 경우 -->
     <tr th:if="${#lists.isEmpty(myLectures)}">
       <td colspan="3">아직 생성한 강의가 없습니다.</td>
     </tr>
     </tbody>
+
   </table>
 </div>
 
