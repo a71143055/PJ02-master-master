@@ -45,11 +45,12 @@ public class LectureController {
         Lecture lecture = new Lecture();
         lecture.setTitle(title);
         lecture.setDescription(description);
-        lecture.setProfessor(professor); // ✅ professorId 대신 객체로 연결
+        lecture.setProfessor(professor); // ✅ 꼭 있어야 함
 
         lectureRepository.save(lecture);
         return "redirect:/home";
     }
+
 
 
     @GetMapping("/my-lectures")
@@ -107,20 +108,19 @@ public class LectureController {
 
     @GetMapping("/home")
     public String home(Model model, Principal principal) {
-        // 로그인한 사용자 정보 가져오기
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("사용자 정보를 찾을 수 없습니다."));
 
         model.addAttribute("username", user.getUsername());
 
-        // 교수일 경우 본인의 강의 목록 조회
         if (user.getRole().equals("PROFESSOR")) {
             List<Lecture> myLectures = lectureRepository.findByProfessor(user);
-            model.addAttribute("myLectures", myLectures); // ✅ 여기서 모델에 담기
+            model.addAttribute("myLectures", myLectures); // ✅ 있어야 함
         }
 
-        return "home"; // home.html 렌더링
+        return "home";
     }
+
 
 
 

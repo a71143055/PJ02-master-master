@@ -14,8 +14,8 @@ public class User {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(columnDefinition = "VARCHAR(36)")
-    private String id;
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
     @Column(unique = true)
     private String username;
