@@ -117,9 +117,6 @@ public class LectureController {
         model.addAttribute("username", user.getUsername());
 
         if (user.getRole() == Role.PROFESSOR) {
-            // 교수 전용 로직
-        }
-        {
             List<Lecture> myLectures = lectureRepository.findByProfessor(user);
             model.addAttribute("myLectures", myLectures); // ✅ 있어야 함
         }
@@ -127,7 +124,7 @@ public class LectureController {
         return "home";
     }
 
-    @GetMapping("/lectures/{id}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasRole('PROFESSOR')")
     public String showLectureDetail(@PathVariable Long id, Model model, Principal principal) {
         Lecture lecture = lectureRepository.findById(id)
