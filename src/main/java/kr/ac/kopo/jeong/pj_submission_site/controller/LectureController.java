@@ -101,4 +101,13 @@ public class LectureController {
         return "redirect:/lectures/my-lectures";
     }
 
+    @GetMapping("/home")
+    public String home(Model model, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("사용자 정보를 찾을 수 없습니다."));
+
+        model.addAttribute("username", user.getUsername());
+        return "home";
+    }
+
 }
