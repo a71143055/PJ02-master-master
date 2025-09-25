@@ -107,7 +107,9 @@ public class LectureController {
                 .orElseThrow(() -> new RuntimeException("사용자 정보를 찾을 수 없습니다."));
 
         model.addAttribute("username", user.getUsername());
-        return "home";
+
+        return "home"; // home.html
     }
+
 
 }
