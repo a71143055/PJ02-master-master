@@ -17,7 +17,7 @@ public class Lecture {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "professor_id")
+    @JoinColumn(name = "professor_id", nullable = false)
     private User professor; // ✅ 이 필드와 연결됨
 }
 
