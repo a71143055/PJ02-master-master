@@ -55,11 +55,15 @@ public class LectureController {
     @GetMapping("/my-lectures")
     @PreAuthorize("hasRole('PROFESSOR')")
     public String showMyLectures(Model model, Principal principal) {
-        User professor = userRepository.findByUsername(principal.getName()).orElseThrow(() -> new RuntimeException("사용자 정보를 찾을 수 없습니다."));
-        List<Lecture> lectures = lectureRepository.findByProfessorId(professor.getId());
+        User professor = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("사용자 정보를 찾을 수 없습니다."));
+
+        List<Lecture> lectures = lectureRepository.findByProfessor(professor); // ✅ 수정된 부분
         model.addAttribute("lectures", lectures);
+
         return "myLectures";
     }
+
 
     @Autowired
     private EnrollmentRepository enrollmentRepository;
