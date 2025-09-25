@@ -1,10 +1,13 @@
 package kr.ac.kopo.jeong.pj_submission_site.controller;
 
+import kr.ac.kopo.jeong.pj_submission_site.model.Enrollment;
 import kr.ac.kopo.jeong.pj_submission_site.model.Lecture;
 import kr.ac.kopo.jeong.pj_submission_site.model.User;
+import kr.ac.kopo.jeong.pj_submission_site.repository.EnrollmentRepository;
 import kr.ac.kopo.jeong.pj_submission_site.repository.LectureRepository;
 import kr.ac.kopo.jeong.pj_submission_site.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,6 +58,42 @@ public class LectureController {
         List<Lecture> lectures = lectureRepository.findByProfessorId(professor.getId());
         model.addAttribute("lectures", lectures);
         return "myLectures";
+    }
+
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
+
+    @PostMapping("/enroll")
+    @PreAuthorize("hasRole('STUDENT')")
+    public String enrollLecture(@RequestParam Long lectureId, Principal principal) {
+        User student = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("학생 정보를 찾을 수 없습니다."));
+        Enrollment enrollment = new Enrollment();
+        enrollment.setStudentId(student.getId());
+        enrollment.setLectureId(lectureId);
+        enrollmentRepository.save(enrollment);
+        return "redirect:/home";
+    }
+
+    @GetMapping("/{id}")
+    public String showLectureDetail(@PathVariable Long id, Model model) {
+        Lecture lecture = lectureRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("강의를 찾을 수 없습니다."));
+        model.addAttribute("lecture", lecture);
+        return "lectureDetail";
+    }
+
+    @PostMapping("/delete/{id}")
+    @PreAuthorize("hasRole('PROFESSOR')")
+    public String deleteLecture(@PathVariable Long id, Principal principal) {
+        Lecture lecture = lectureRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("강의를 찾을 수 없습니다."));
+        User professor = userRepository.findByUsername(principal.getName()).orElseThrow();
+        if (!lecture.getProfessorId().equals(professor.getId())) {
+            throw new AccessDeniedException("삭제 권한이 없습니다.");
+        }
+        lectureRepository.delete(lecture);
+        return "redirect:/lectures/my-lectures";
     }
 
 }
