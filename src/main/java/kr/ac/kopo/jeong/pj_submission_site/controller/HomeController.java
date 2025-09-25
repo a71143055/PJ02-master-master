@@ -12,7 +12,6 @@ import java.util.List;
 
 @Controller
 public class HomeController {
-
     @Autowired
     private UserRepository userRepository;
 
@@ -23,5 +22,4 @@ public class HomeController {
         model.addAttribute("users", users);
         return "home";
     }
-
 }
