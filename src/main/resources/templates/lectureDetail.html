@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강의 상세 정보</title>
+</head>
+<body>
+<h1>강의 상세 정보</h1>
+
+<div>
+    <strong>강의명:</strong>
+    <span th:text="${lecture.title}">강의 제목</span>
+</div>
+
+<div>
+    <strong>설명:</strong>
+    <p th:text="${lecture.description}">강의 설명</p>
+</div>
+
+<div>
+    <strong>교수:</strong>
+    <span th:text="${lecture.professor.username}">교수 이름</span>
+</div>
+
+<div>
+    <a th:href="@{/home}">홈으로 돌아가기</a>
+</div>
+</body>
+</html>

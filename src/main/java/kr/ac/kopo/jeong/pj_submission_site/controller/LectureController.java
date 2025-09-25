@@ -75,7 +75,7 @@ public class LectureController {
         User student = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("학생 정보를 찾을 수 없습니다."));
         Enrollment enrollment = new Enrollment();
-        enrollment.setStudentId(student.getId());
+        enrollment.setStudentId(String.valueOf(student.getId()));
         enrollment.setLectureId(lectureId);
         enrollmentRepository.save(enrollment);
         return "redirect:/home";
