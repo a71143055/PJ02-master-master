@@ -45,11 +45,12 @@ public class LectureController {
         Lecture lecture = new Lecture();
         lecture.setTitle(title);
         lecture.setDescription(description);
-        lecture.setProfessorId(professor.getId());
+        lecture.setProfessor(professor); // ✅ professorId 대신 객체로 연결
 
         lectureRepository.save(lecture);
         return "redirect:/home";
     }
+
 
     @GetMapping("/my-lectures")
     @PreAuthorize("hasRole('PROFESSOR')")
@@ -88,10 +89,14 @@ public class LectureController {
     public String deleteLecture(@PathVariable Long id, Principal principal) {
         Lecture lecture = lectureRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("강의를 찾을 수 없습니다."));
-        User professor = userRepository.findByUsername(principal.getName()).orElseThrow();
-        if (!lecture.getProfessorId().equals(professor.getId())) {
+        User professor = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("교수 정보를 찾을 수 없습니다."));
+
+        // ✅ 교수 본인이 생성한 강의인지 확인
+        if (!lecture.getProfessor().getId().equals(professor.getId())) {
             throw new AccessDeniedException("삭제 권한이 없습니다.");
         }
+
         lectureRepository.delete(lecture);
         return "redirect:/lectures/my-lectures";
     }
