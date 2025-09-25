@@ -13,14 +13,13 @@ public class Lecture {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title; // 강의명
+    private String title;
     private String description;
 
     @ManyToOne
     @JoinColumn(name = "professor_id")
     private User professor; // 강의를 생성한 교수
-    private String professorUsername;
-    private String professorId;
 
+    private String professorUsername; // 선택적으로 유지 가능
 }
 
