@@ -103,13 +103,21 @@ public class LectureController {
 
     @GetMapping("/home")
     public String home(Model model, Principal principal) {
+        // 로그인한 사용자 정보 가져오기
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("사용자 정보를 찾을 수 없습니다."));
 
         model.addAttribute("username", user.getUsername());
 
-        return "home"; // home.html
+        // 교수일 경우 본인의 강의 목록 조회
+        if (user.getRole().equals("PROFESSOR")) {
+            List<Lecture> myLectures = lectureRepository.findByProfessor(user);
+            model.addAttribute("myLectures", myLectures); // ✅ 여기서 모델에 담기
+        }
+
+        return "home"; // home.html 렌더링
     }
+
 
 
 }
